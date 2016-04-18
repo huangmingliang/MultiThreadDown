@@ -1,0 +1,4 @@
+<resources>
+    <string name="down">下载</string>
+    <string name="app_name">多线程下载</string>
+</resources>
