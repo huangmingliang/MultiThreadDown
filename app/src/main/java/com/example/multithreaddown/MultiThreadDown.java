@@ -1,5 +1,4 @@
 package com.example.multithreaddown;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -12,6 +11,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+
+import com.example.multithreaddown.DownUtil;
 
 /**
  * Description:
@@ -37,12 +38,12 @@ public class MultiThreadDown extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		// ��ȡ��������е��������ؼ�
+		// 获取程序界面中的三个界面控件
 		url = (EditText) findViewById(R.id.url);
 		target = (EditText) findViewById(R.id.target);
 		downBn = (Button) findViewById(R.id.down);
 		bar = (ProgressBar) findViewById(R.id.bar);
-		// ����һ��Handler����
+		// 创建一个Handler对象
 		final Handler handler = new Handler()
 		{
 			@Override
@@ -59,9 +60,9 @@ public class MultiThreadDown extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				// ��ʼ��DownUtil�������һ������ָ���߳���
+				// 初始化DownUtil对象（最后一个参数指定线程数）
 				downUtil = new DownUtil(url.getText().toString(),
-					target.getText().toString(), 6);
+						target.getText().toString(), 6);
 				new Thread()
 				{
 					@Override
@@ -69,26 +70,26 @@ public class MultiThreadDown extends Activity
 					{
 						try
 						{
-							// ��ʼ����
+							// 开始下载
 							downUtil.download();
 						}
 						catch (Exception e)
 						{
 							e.printStackTrace();
 						}
-						// ����ÿ����Ȼ�ȡһ��ϵͳ����ɽ��
+						// 定义每秒调度获取一次系统的完成进度
 						final Timer timer = new Timer();
 						timer.schedule(new TimerTask()
 						{
 							@Override
 							public void run()
 							{
-								// ��ȡ�����������ɱ���
+								// 获取下载任务的完成比率
 								double completeRate = downUtil.getCompleteRate();
 								mDownStatus = (int) (completeRate * 100);
-								// ������Ϣ֪ͨ������½����
+								// 发送消息通知界面更新进度条
 								handler.sendEmptyMessage(0x123);
-								// ������ȫ��ȡ���������
+								// 下载完全后取消任务调度
 								if (mDownStatus >= 100)
 								{
 									timer.cancel();
