@@ -62,7 +62,7 @@ public class MultiThreadDown extends Activity
 			{
 				// 初始化DownUtil对象（最后一个参数指定线程数）
 				downUtil = new DownUtil(url.getText().toString(),
-						target.getText().toString(), 6);
+						target.getText().toString(), 2);
 				new Thread()
 				{
 					@Override

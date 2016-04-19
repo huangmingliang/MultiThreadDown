@@ -58,8 +58,16 @@ public class DownUtil {
         conn.setRequestProperty("Connection", "Keep-Alive");
         // 得到文件大小
         fileSize = conn.getContentLength();
+        Log.e(TAG,"文件大小fileSize:"+fileSize);
         conn.disconnect();
-        int currentPartSize = fileSize / threadNum + 1;
+        //除最后一个线程外其它线程平均下载的文件大小
+        int currentPartSize = fileSize / threadNum ;
+        Log.e(TAG,"第1-(threadNum-1)线程平均下载的文件大小currentPartSize:"+currentPartSize);
+        int currentSumSize=(threadNum-1)*currentPartSize;
+        Log.e(TAG,"第1-(threadNum-1)线程累计文件大小currentSumSize:"+currentSumSize);
+        //最后一个线程下载的文件大小
+        int lastPartSize=fileSize-currentSumSize;
+        Log.e(TAG,"第threadNum个线程下载的文件大小lastPartSize:"+lastPartSize);
         RandomAccessFile file = new RandomAccessFile(targetFile, "rw");
         // 设置本地文件的大小
         file.setLength(fileSize);
@@ -67,14 +75,26 @@ public class DownUtil {
         for (int i = 0; i < threadNum; i++) {
             // 计算每条线程的下载的开始位置
             int startPos = i * currentPartSize;
+                Log.e(TAG,"下载起点startPos:"+startPos);
             // 每个线程使用一个RandomAccessFile进行下载
             RandomAccessFile currentPart = new RandomAccessFile(targetFile,
                     "rw");
+            //当前文件指针位置
+            long pointPosition1=currentPart.getFilePointer();
+            Log.e(TAG,"当前文件指针位置pointPosition-1:"+pointPosition1);
             // 定位该线程的下载位置
             currentPart.seek(startPos);
+            long pointPosition2=currentPart.getFilePointer();
+            Log.e(TAG,"当前文件指针位置pointPosition-2:"+pointPosition2);
             // 创建下载线程
-            threads[i] = new DownThread(startPos, currentPartSize,
-                    currentPart);
+            //最后一个线程下载文件剩余长度
+            if (i!=threadNum-1){
+                threads[i] = new DownThread(startPos, currentPartSize,
+                        currentPart);
+            }else {
+                threads[i] = new DownThread(startPos, lastPartSize,
+                        currentPart);
+            }
             // 启动下载线程
             threads[i].start();
         }
@@ -130,15 +150,16 @@ public class DownUtil {
                 InputStream inStream = conn.getInputStream();
                 // 跳过startPos个字节，表明该线程只下载自己负责哪部分文件。
                 inStream.skip(this.startPos);
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[1];
                 int hasRead = 0;
                 // 读取网络数据，并写入本地文件
                 while (length < currentPartSize
-                        && (hasRead = inStream.read(buffer)) > 0) {
+                        && (hasRead = inStream.read(buffer)) !=-1) {
                     currentPart.write(buffer, 0, hasRead);
                     // 累计该线程下载的总大小
                     length += hasRead;
                 }
+                Log.e(TAG,"累计该线程下载的总大小length:"+length);
                 currentPart.close();
                 inStream.close();
             } catch (Exception e) {
