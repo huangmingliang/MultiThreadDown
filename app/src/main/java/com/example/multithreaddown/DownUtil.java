@@ -1,5 +1,7 @@
 package com.example.multithreaddown;
 
+import android.util.Log;
+
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
@@ -17,6 +19,8 @@ import java.net.URL;
  * @version 1.0
  */
 public class DownUtil {
+
+    private String TAG=getClass().getSimpleName();
     // 定义下载资源的路径
     private String path;
     // 指定所下载的文件的保存位置
@@ -37,6 +41,7 @@ public class DownUtil {
     }
 
     public void download() throws Exception {
+        Log.e(TAG,"文件地址path:"+path);
         URL url = new URL(path);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(5 * 1000);
