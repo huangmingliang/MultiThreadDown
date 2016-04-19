@@ -4,40 +4,40 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	>
-<TextView
-	android:layout_width="match_parent" 
-	android:layout_height="wrap_content"
-	android:text="要下载的资源的URL："
-	/>
-<EditText
-	android:id="@+id/url"  
-	android:layout_width="match_parent" 
-	android:layout_height="wrap_content"
-	android:text="http://www.crazyit.org/attachment.php?aid=MTA5M3w5OTUyNGEzNHwxMzUyODIzNDM0fDU0MDQ2MHNzd1p5Y25KVkFDYXYzUS9uMEpOUnBKRjFCbFpkTldleWpRYzZUbzVV"
-	/>
-<TextView
-	android:layout_width="match_parent" 
-	android:layout_height="wrap_content"
-	android:text="目标文件："
-	/>
-<EditText
-	android:id="@+id/target"  
-	android:layout_width="match_parent" 
-	android:layout_height="wrap_content"
-	android:text="/mnt/sdcard/PullRefreshListView.rar"
-	/>	
-<Button
-	android:id="@+id/down"  
-	android:layout_width="match_parent" 
-	android:layout_height="wrap_content"
-	android:text="@string/down"
-	/>
-<!-- 定义一个水平进度条,用于显示下载进度 -->
-<ProgressBar
-	android:id="@+id/bar"
- 	android:layout_width="match_parent" 
-	android:layout_height="wrap_content"
-	android:max="100"
-	style="?android:attr/progressBarStyleHorizontal"
-	android:indeterminate="false" />
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="要下载的资源的URL："
+		/>
+	<EditText
+		android:id="@+id/url"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="http://nbct01.baidupcs.com/file/6ec6c267905b5e79794b9b505a49211c?bkt=p3-14006ec6c267905b5e79794b9b505a49211c32db66b20000000ea246&amp;fid=3009446438-250528-1068398533691815&amp;time=1461053538&amp;sign=FDTAXGERLBH-DCb740ccc5511e5e8fedcff06b081203-Uv%2B6SYgCpmidyMruvnUDsev1vH0%3D&amp;to=nbhb&amp;fm=Nin,B,T,t&amp;sta_dx=1&amp;sta_cs=0&amp;sta_ft=pdf&amp;sta_ct=0&amp;fm2=Ningbo,B,T,t&amp;newver=1&amp;newfm=1&amp;secfm=1&amp;flow_ver=3&amp;pkey=14006ec6c267905b5e79794b9b505a49211c32db66b20000000ea246&amp;sl=74448975&amp;expires=8h&amp;rt=sh&amp;r=929573706&amp;mlogid=2543677927905967827&amp;vuk=3009446438&amp;vbdid=3389237617&amp;fin=HTTP%E5%8D%8F%E8%AE%AE.pdf&amp;fn=HTTP%E5%8D%8F%E8%AE%AE.pdf&amp;slt=pm&amp;uta=0&amp;rtype=1&amp;iv=0&amp;isw=0&amp;dp-logid=2543677927905967827&amp;dp-callid=0.1.1"
+		/>
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="目标文件："
+		/>
+	<EditText
+		android:id="@+id/target"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="/mnt/sdcard/http.pdf"
+		/>
+	<Button
+		android:id="@+id/down"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/down"
+		/>
+	<!-- 定义一个水平进度条,用于显示下载进度 -->
+	<ProgressBar
+		android:id="@+id/bar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:max="100"
+		style="?android:attr/progressBarStyleHorizontal"
+		/>
 </LinearLayout>
