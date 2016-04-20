@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import com.example.multithreaddown.DownUtil;
  */
 public class MultiThreadDown extends Activity
 {
+	String TAG=getClass().getSimpleName();
 	EditText url;
 	EditText target;
 	Button downBn;
@@ -62,7 +64,7 @@ public class MultiThreadDown extends Activity
 			{
 				// 初始化DownUtil对象（最后一个参数指定线程数）
 				downUtil = new DownUtil(url.getText().toString(),
-						target.getText().toString(), 1);
+						target.getText().toString(), 6);
 				new Thread()
 				{
 					@Override
@@ -86,6 +88,7 @@ public class MultiThreadDown extends Activity
 							{
 								// 获取下载任务的完成比率
 								double completeRate = downUtil.getCompleteRate();
+								//Log.e(TAG,"下载进度："+completeRate);
 								mDownStatus = (int) (completeRate * 100);
 								// 发送消息通知界面更新进度条
 								handler.sendEmptyMessage(0x123);

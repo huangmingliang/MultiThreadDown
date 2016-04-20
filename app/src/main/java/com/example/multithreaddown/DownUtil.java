@@ -2,6 +2,7 @@ package com.example.multithreaddown;
 
 import android.util.Log;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
@@ -68,7 +69,7 @@ public class DownUtil {
         //最后一个线程下载的文件大小
         int lastPartSize=fileSize-currentSumSize;
         Log.e(TAG,"第threadNum个线程下载的文件大小lastPartSize:"+lastPartSize);
-        RandomAccessFile file = new RandomAccessFile(targetFile, "rw");
+        RandomAccessFile file = new RandomAccessFile(targetFile, "rwd");
         // 设置本地文件的大小
         file.setLength(fileSize);
         file.close();
@@ -76,17 +77,13 @@ public class DownUtil {
             // 计算每条线程的下载的开始位置
             int startPos = i * currentPartSize;
             int endPos=(i+1)*currentPartSize-1;
-            //Log.e(TAG,"下载起点startPos:"+startPos);
+            Log.e(TAG,"下载起点startPos:"+startPos);
+            Log.e(TAG,"下载终点endPos:"+endPos);
             // 每个线程使用一个RandomAccessFile进行下载
             RandomAccessFile currentPart = new RandomAccessFile(targetFile,
-                    "rw");
-            //当前文件指针位置
-            //long pointPosition1=currentPart.getFilePointer();
-            //Log.e(TAG,"当前文件指针位置pointPosition-1:"+pointPosition1);
+                    "rwd");
             // 定位该线程的下载位置
             currentPart.seek(startPos);
-            //long pointPosition2=currentPart.getFilePointer();
-            //Log.e(TAG,"当前文件指针位置pointPosition-2:"+pointPosition2);
             // 创建下载线程
             //最后一个线程下载文件剩余长度
                 threads[i] = new DownThread(startPos,endPos,currentPartSize,
@@ -149,20 +146,22 @@ public class DownUtil {
                 conn.setRequestProperty("Range", "bytes=" + startPos + "-" + endPos);
                 conn.setRequestProperty("Accept-Language", "zh-CN");
                 conn.setRequestProperty("Charset", "UTF-8");
+                Log.e(TAG,"单次获取文件大小："+conn.getContentLength());
+                BufferedInputStream bis=new BufferedInputStream(conn.getInputStream());
                 InputStream inStream = conn.getInputStream();
                 // 跳过startPos个字节，表明该线程只下载自己负责哪部分文件。
-                inStream.skip(this.startPos);
+                //inStream.skip(startPos);
                 byte[] buffer = new byte[1024];
                 int hasRead = 0;
                 // 读取网络数据，并写入本地文件
-                while ((hasRead = inStream.read(buffer))!=-1) {
+                while ((hasRead = bis.read(buffer))!=-1) {
                     currentPart.write(buffer, 0, hasRead);
                     // 累计该线程下载的总大小
                     length += hasRead;
                 }
                 Log.e(TAG,"线程"+Thread.currentThread().getName()+"下载的文件大小length:"+length);
                 currentPart.close();
-                inStream.close();
+                bis.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
